@@ -1,12 +1,25 @@
+# -*- coding: utf-8 -*-
 import numpy as np
 import pandas as pd
+import os
 
 
-stock_monthly=pd.read_excel("D:/BaiduNetdiskDownload/New Data/300.SH.xlsx", usecols = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,8,29,30,31,32,33,34,35],sheet_name=0, header=2, index_col=None);
-stock_monthly=stock_monthly.dropna(axis=0, how='any', subset=["营业收入(同比增长率)","净利润(同比增长率)"]);
-print(stock_monthly)
-stock_weekly = pd.read_excel("D:/BaiduNetdiskDownload/Data weekly/603993.SH.xlsx");
-df1 = pd.merge(stock_monthly,stock_weekly,how='outer')
-newdata = df1.drop_duplicates(subset=['日期'],keep="first");
-newdata.to_csv("D:/BaiduNetdiskDownload/improved data/603993.SH.csv",encoding="utf_8_sig")
-stock_monthly.to_csv("D:/BaiduNetdiskDownload/improved data/stock_monthly.csv",encoding="utf_8_sig")
+##os.chdir(path) 若想改变工作路径可以用chdir函数
+monthlist = []
+weeklist = []
+test_list=pd.read_csv("D:/BaiduNetdiskDownload/300.csv",header=None,encoding="unicode_escape")
+test_list=test_list[0].tolist()
+for s in test_list:
+    stock_monthly = pd.read_excel(str("D:/BaiduNetdiskDownload/Data monthly/"+s+".xlsx"),
+                                  usecols=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+                                           22, 23, 24, 25, 26, 27, 8, 29, 30, 31, 32, 33, 34, 35], sheet_name=0,
+                                  header=3, index_col=None)
+    stock_monthly = stock_monthly.dropna(axis=0, how='any', subset=["yoy_or"]);
+    # print(stock_monthly)
+    stock_weekly=pd.read_excel(str("D:/BaiduNetdiskDownload/Data weekly/"+s+".xlsx"), sheet_name=0, header=3, index_col=None)
+    # print(stock_weekly)
+    df1 = pd.merge(stock_monthly, stock_weekly, how='outer')
+    # print(df1)
+    newdata = df1.drop_duplicates(subset=['Date'], keep="first");
+    newdata.to_csv(str("D:/BaiduNetdiskDownload/improved data/"+s+".csv"), index=None,encoding="unicode_escape")
+    print(s)
